@@ -1,8 +1,9 @@
-import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, BookOpen, Settings, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,12 @@ interface HeaderProps {
 }
 
 const Header = ({ userXP, userLevel, onOpenPreferences }: HeaderProps) => {
+  const { profile, signOut } = useAuth();
+
+  const handleSignOut = () => {
+    signOut();
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
       <div className="flex items-center space-x-4">
@@ -54,9 +61,12 @@ const Header = ({ userXP, userLevel, onOpenPreferences }: HeaderProps) => {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder-avatar.jpg" alt="Usuário" />
+                <AvatarImage src={profile?.avatar_url || undefined} alt="Usuário" />
                 <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                  <User className="w-5 h-5" />
+                  {profile?.full_name 
+                    ? profile.full_name.charAt(0).toUpperCase()
+                    : <User className="w-5 h-5" />
+                  }
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -68,9 +78,11 @@ const Header = ({ userXP, userLevel, onOpenPreferences }: HeaderProps) => {
           >
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Estudante</p>
+                <p className="text-sm font-medium leading-none">
+                  {profile?.full_name || 'Usuário'}
+                </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  estudante@email.com
+                  {profile?.email}
                 </p>
               </div>
             </DropdownMenuLabel>
@@ -83,7 +95,10 @@ const Header = ({ userXP, userLevel, onOpenPreferences }: HeaderProps) => {
               <span>Preferências</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-blue-600" />
-            <DropdownMenuItem className="hover:bg-blue-600 hover:text-black">
+            <DropdownMenuItem 
+              onClick={handleSignOut}
+              className="hover:bg-blue-600 hover:text-black"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>
             </DropdownMenuItem>
