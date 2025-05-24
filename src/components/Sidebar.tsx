@@ -1,9 +1,8 @@
-
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Trophy, Star, Target, BookOpen, Clock, Award } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Trophy, Star, Target, BookOpen, Clock, Award } from "lucide-react";
 
 interface SidebarProps {
   userXP: number;
@@ -22,14 +21,23 @@ interface Achievement {
   unlockedAt?: Date;
 }
 
-const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }: SidebarProps) => {
+const Sidebar = ({
+  userXP,
+  userLevel,
+  achievements,
+  studyStreak,
+  onOpenHistory,
+}: SidebarProps) => {
   const xpForNextLevel = (userLevel + 1) * 100;
   const currentLevelXP = userXP % 100;
   const progressPercent = (currentLevelXP / 100) * 100;
 
   const recentAchievements = achievements
-    .filter(a => a.unlocked)
-    .sort((a, b) => new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime())
+    .filter((a) => a.unlocked)
+    .sort(
+      (a, b) =>
+        new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime()
+    )
     .slice(0, 3);
 
   return (
@@ -43,7 +51,9 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
             </div>
             <div>
               <h3 className="font-semibold">Nível {userLevel}</h3>
-              <p className="text-sm text-gray-600">{currentLevelXP}/{100} XP</p>
+              <p className="text-sm text-gray-600">
+                {currentLevelXP}/{100} XP
+              </p>
             </div>
             <Progress value={progressPercent} className="h-2" />
             <p className="text-xs text-gray-500">
@@ -62,7 +72,9 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
             </div>
             <div>
               <h4 className="font-medium">Sequência de estudos</h4>
-              <p className="text-sm text-gray-600">{studyStreak} dias seguidos</p>
+              <p className="text-sm text-gray-600">
+                {studyStreak} dias seguidos
+              </p>
             </div>
           </div>
         </CardContent>
@@ -78,11 +90,21 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
           <div className="space-y-2">
             {recentAchievements.length > 0 ? (
               recentAchievements.map((achievement) => (
+<<<<<<< HEAD
                 <div key={achievement.id} className="flex items-center space-x-2 p-2 bg-indigo-50 rounded-lg">
                   <Award className="w-4 h-4 text-indigo-600" />
+=======
+                <div
+                  key={achievement.id}
+                  className="flex items-center space-x-2 p-2 bg-yellow-50 rounded-lg"
+                >
+                  <Award className="w-4 h-4 text-yellow-600" />
+>>>>>>> c2b31fc (fix: fix color of some components)
                   <div className="flex-1">
                     <p className="text-sm font-medium">{achievement.title}</p>
-                    <p className="text-xs text-gray-600">{achievement.description}</p>
+                    <p className="text-xs text-gray-600">
+                      {achievement.description}
+                    </p>
                   </div>
                 </div>
               ))
@@ -99,19 +121,25 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
       <Card>
         <CardContent className="p-4 space-y-2">
           <h4 className="font-medium mb-3">Ações Rápidas</h4>
-          <Button 
-            variant="outline" 
-            className="w-full justify-start" 
+          <Button
+            variant="outline"
+            className="w-full justify-start bg-yellow-50 hover:bg-yellow-100"
             onClick={onOpenHistory}
           >
             <Clock className="w-4 h-4 mr-2" />
             Histórico de Estudos
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button
+            variant="outline"
+            className="w-full justify-start bg-yellow-50 hover:bg-yellow-100"
+          >
             <BookOpen className="w-4 h-4 mr-2" />
             Tópicos Favoritos
           </Button>
-          <Button variant="outline" className="w-full justify-start">
+          <Button
+            variant="outline"
+            className="w-full justify-start bg-yellow-50 hover:bg-yellow-100"
+          >
             <Trophy className="w-4 h-4 mr-2" />
             Todas as Conquistas
           </Button>
