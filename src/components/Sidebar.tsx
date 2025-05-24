@@ -90,16 +90,12 @@ const Sidebar = ({
           <div className="space-y-2">
             {recentAchievements.length > 0 ? (
               recentAchievements.map((achievement) => (
-<<<<<<< HEAD
-                <div key={achievement.id} className="flex items-center space-x-2 p-2 bg-indigo-50 rounded-lg">
-                  <Award className="w-4 h-4 text-indigo-600" />
-=======
                 <div
                   key={achievement.id}
-                  className="flex items-center space-x-2 p-2 bg-yellow-50 rounded-lg"
+                  className="flex items-center space-x-2 p-2 bg-indigo-50 rounded-lg"
                 >
-                  <Award className="w-4 h-4 text-yellow-600" />
->>>>>>> c2b31fc (fix: fix color of some components)
+                  <Award className="w-4 h-4 text-indigo-600" />
+
                   <div className="flex-1">
                     <p className="text-sm font-medium">{achievement.title}</p>
                     <p className="text-xs text-gray-600">
