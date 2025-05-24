@@ -38,7 +38,7 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
       <Card>
         <CardContent className="p-4">
           <div className="text-center space-y-3">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
               <Star className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -57,8 +57,8 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-              <Target className="w-5 h-5 text-orange-600" />
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <Target className="w-5 h-5 text-purple-600" />
             </div>
             <div>
               <h4 className="font-medium">Sequência de estudos</h4>
@@ -72,14 +72,14 @@ const Sidebar = ({ userXP, userLevel, achievements, studyStreak, onOpenHistory }
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center space-x-2 mb-3">
-            <Trophy className="w-5 h-5 text-yellow-600" />
+            <Trophy className="w-5 h-5 text-indigo-600" />
             <h4 className="font-medium">Conquistas Recentes</h4>
           </div>
           <div className="space-y-2">
             {recentAchievements.length > 0 ? (
               recentAchievements.map((achievement) => (
-                <div key={achievement.id} className="flex items-center space-x-2 p-2 bg-yellow-50 rounded-lg">
-                  <Award className="w-4 h-4 text-yellow-600" />
+                <div key={achievement.id} className="flex items-center space-x-2 p-2 bg-indigo-50 rounded-lg">
+                  <Award className="w-4 h-4 text-indigo-600" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">{achievement.title}</p>
                     <p className="text-xs text-gray-600">{achievement.description}</p>
