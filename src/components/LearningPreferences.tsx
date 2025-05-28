@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   Card,
@@ -9,19 +10,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, FileText, Play, HelpCircle, Shuffle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LearningPreferencesProps {
   currentStyle: string;
-  onStyleChange: (style: string) => void;
   onClose: () => void;
 }
 
 const LearningPreferences = ({
   currentStyle,
-  onStyleChange,
   onClose,
 }: LearningPreferencesProps) => {
   const [selectedStyle, setSelectedStyle] = useState(currentStyle);
+  const { updateProfile } = useAuth();
 
   const learningStyles = [
     {
@@ -61,8 +62,8 @@ const LearningPreferences = ({
     },
   ];
 
-  const handleSave = () => {
-    onStyleChange(selectedStyle);
+  const handleSave = async () => {
+    await updateProfile({ learning_style: selectedStyle });
     onClose();
   };
 

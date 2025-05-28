@@ -44,9 +44,7 @@ const Index = () => {
                 userXP={userProgress.xp}
                 userLevel={userProgress.level}
                 onOpenPreferences={() => setShowPreferences(true)}
-              >
-                <SidebarTrigger className="mr-2" />
-              </Header>
+              />
 
               <div className="flex-1 overflow-hidden">
                 <ChatInterface learningStyle={learningStyle} onXPGain={addXP} />

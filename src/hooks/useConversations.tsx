@@ -21,7 +21,7 @@ export interface Message {
   timestamp: string | Date;
 }
 
-export const useConversations = (learningStyle: string) => {
+export const useConversations = (learningStyle?: string) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -104,13 +104,14 @@ export const useConversations = (learningStyle: string) => {
       await fetchConversations();
       setCurrentConversation(data);
       
-      // Add greeting message
+      // Add greeting message with learningStyle context
+      const style = learningStyle || "Textos explicativos";
       const greetingMessage: Message = {
         id: `greeting-${data.id}`,
         conversation_id: data.id,
         user_id: user.id,
         author: "ai",
-        content: `Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓\n\nVi que você prefere aprender através de **${learningStyle}**. Vou adaptar todas as minhas respostas para esse estilo!\n\nO que você gostaria de aprender hoje?`,
+        content: `Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓\n\nVi que você prefere aprender através de **${style}**. Vou adaptar todas as minhas respostas para esse estilo!\n\nO que você gostaria de aprender hoje?`,
         timestamp: new Date(),
       };
       
