@@ -38,13 +38,16 @@ const Index = () => {
             onOpenPreferences={() => setShowPreferences(true)} 
           />
           
-          <SidebarInset>
+          <SidebarInset className="flex-1">
             <div className="flex flex-col h-screen">
-              <Header
-                userXP={userProgress.xp}
-                userLevel={userProgress.level}
-                onOpenPreferences={() => setShowPreferences(true)}
-              />
+              <div className="flex items-center border-b border-gray-200 bg-white px-4 py-3">
+                <SidebarTrigger className="mr-4" />
+                <Header
+                  userXP={userProgress.xp}
+                  userLevel={userProgress.level}
+                  onOpenPreferences={() => setShowPreferences(true)}
+                />
+              </div>
 
               <div className="flex-1 overflow-hidden">
                 <ChatInterface learningStyle={learningStyle} onXPGain={addXP} />

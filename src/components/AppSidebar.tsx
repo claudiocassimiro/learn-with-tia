@@ -28,7 +28,6 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
 import { useConversations } from "@/hooks/useConversations";
-import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import {
   AlertDialog,
@@ -85,56 +84,59 @@ export function AppSidebar({ learningStyle, onOpenPreferences }: AppSidebarProps
   };
 
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center space-x-3 p-2">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-white" />
+    <Sidebar className="border-r border-gray-200 bg-white">
+      <SidebarHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+        <div className="flex items-center space-x-3 p-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-sm">
+            <User className="w-6 h-6 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-semibold text-gray-900 truncate">
               {profile?.full_name || profile?.email}
             </p>
-            <div className="flex items-center space-x-2">
-              <Badge variant="outline" className="text-xs">
+            <div className="flex items-center space-x-2 mt-1">
+              <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 border-blue-200">
                 Nível {userProgress?.level || 1}
               </Badge>
               <div className="flex items-center space-x-1">
                 <Star className="w-3 h-3 text-yellow-500" />
-                <span className="text-xs text-gray-600">{userProgress?.xp || 0}</span>
+                <span className="text-xs font-medium text-gray-600">{userProgress?.xp || 0} XP</span>
               </div>
             </div>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarSeparator />
+      <SidebarSeparator className="bg-gray-200" />
 
-      <SidebarContent>
+      <SidebarContent className="bg-white">
         <SidebarGroup>
-          <SidebarGroupLabel>Conversas</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupLabel className="text-gray-600 font-medium px-4 py-2">Conversas</SidebarGroupLabel>
+          <SidebarGroupContent className="px-2">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleNewConversation}>
-                  <Plus className="w-4 h-4" />
-                  <span>Nova Conversa</span>
-                </SidebarMenuButton>
+                <Button
+                  onClick={handleNewConversation}
+                  className="w-full justify-start bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-sm h-10"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Conversa
+                </Button>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Histórico</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-600 font-medium px-4 py-2">Histórico</SidebarGroupLabel>
           <SidebarGroupContent>
-            <ScrollArea className="h-[300px]">
-              <SidebarMenu>
+            <ScrollArea className="h-[300px] px-2">
+              <SidebarMenu className="space-y-1">
                 {conversations.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500 text-sm">
-                    <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p>Nenhuma conversa ainda.</p>
-                    <p className="text-xs">Comece uma nova!</p>
+                  <div className="p-6 text-center text-gray-500">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <p className="text-sm font-medium">Nenhuma conversa ainda</p>
+                    <p className="text-xs text-gray-400 mt-1">Comece uma nova conversa!</p>
                   </div>
                 ) : (
                   conversations.map((conversation) => (
@@ -143,14 +145,18 @@ export function AppSidebar({ learningStyle, onOpenPreferences }: AppSidebarProps
                         <SidebarMenuButton
                           onClick={() => selectConversation(conversation)}
                           isActive={currentConversation?.id === conversation.id}
-                          className="flex-1"
+                          className={`flex-1 p-3 rounded-lg transition-all duration-200 ${
+                            currentConversation?.id === conversation.id
+                              ? 'bg-blue-50 border-blue-200 border text-blue-900 shadow-sm'
+                              : 'hover:bg-gray-50 text-gray-700 border border-transparent'
+                          }`}
                         >
-                          <MessageSquare className="w-4 h-4" />
-                          <div className="flex-1 min-w-0">
-                            <span className="truncate block">
+                          <MessageSquare className="w-4 h-4 shrink-0" />
+                          <div className="flex-1 min-w-0 text-left">
+                            <span className="truncate block text-sm font-medium">
                               {conversation.title || 'Nova conversa'}
                             </span>
-                            <div className="flex items-center text-xs text-gray-500">
+                            <div className="flex items-center text-xs text-gray-500 mt-1">
                               <Calendar className="w-3 h-3 mr-1" />
                               {formatDate(conversation.updated_at)}
                             </div>
@@ -161,9 +167,9 @@ export function AppSidebar({ learningStyle, onOpenPreferences }: AppSidebarProps
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1"
+                              className="w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity ml-2 hover:bg-red-50 hover:text-red-600"
                             >
-                              <Trash2 className="w-3 h-3 text-red-500" />
+                              <Trash2 className="w-3 h-3" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -195,24 +201,30 @@ export function AppSidebar({ learningStyle, onOpenPreferences }: AppSidebarProps
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarSeparator />
+      <SidebarSeparator className="bg-gray-200" />
 
-      <SidebarFooter>
-        <SidebarMenu>
+      <SidebarFooter className="bg-gray-50 border-t border-gray-100">
+        <SidebarMenu className="space-y-1">
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onOpenPreferences}>
+            <SidebarMenuButton 
+              onClick={onOpenPreferences}
+              className="hover:bg-white hover:shadow-sm transition-all duration-200 text-gray-700"
+            >
               <Settings className="w-4 h-4" />
               <span>Preferências</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton className="hover:bg-white hover:shadow-sm transition-all duration-200 text-gray-700">
               <Trophy className="w-4 h-4" />
               <span>Conquistas</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleSignOut}>
+            <SidebarMenuButton 
+              onClick={handleSignOut}
+              className="hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-gray-700"
+            >
               <LogOut className="w-4 h-4" />
               <span>Sair</span>
             </SidebarMenuButton>
