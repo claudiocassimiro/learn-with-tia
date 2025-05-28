@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,22 +21,10 @@ export interface Message {
   timestamp: string | Date;
 }
 
-export const useConversations = (learningStyle) => {
+export const useConversations = (learningStyle: string) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [currentConversation, setCurrentConversation] =
-    useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      conversation_id: "1",
-      user_id: "1",
-      // Simulating a user ID for the initial message
-      author: "ai",
-      content: `Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓\n\nVi que você prefere aprender através de **${learningStyle}**. Vou adaptar todas as minhas respostas para esse estilo!\n\nO que você gostaria de aprender hoje?`,
-      timestamp: new Date(),
-      // learningType: "greeting",
-    },
-  ]);
+  const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
@@ -76,7 +65,14 @@ export const useConversations = (learningStyle) => {
         .order("timestamp", { ascending: true });
 
       if (error) throw error;
-      setMessages(data || []);
+      
+      // Type assertion to ensure compatibility
+      const typedMessages = (data || []).map(msg => ({
+        ...msg,
+        author: msg.author as "user" | "ai"
+      }));
+      
+      setMessages(typedMessages);
     } catch (error: any) {
       console.error("Error fetching messages:", error);
       toast({
@@ -107,7 +103,18 @@ export const useConversations = (learningStyle) => {
 
       await fetchConversations();
       setCurrentConversation(data);
-      setMessages([]);
+      
+      // Add greeting message
+      const greetingMessage: Message = {
+        id: `greeting-${data.id}`,
+        conversation_id: data.id,
+        user_id: user.id,
+        author: "ai",
+        content: `Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓\n\nVi que você prefere aprender através de **${learningStyle}**. Vou adaptar todas as minhas respostas para esse estilo!\n\nO que você gostaria de aprender hoje?`,
+        timestamp: new Date(),
+      };
+      
+      setMessages([greetingMessage]);
 
       return data;
     } catch (error: any) {
@@ -170,10 +177,16 @@ export const useConversations = (learningStyle) => {
         );
       }
 
-      setMessages((prev) => [...prev, data]);
+      // Type assertion to ensure compatibility
+      const typedMessage = {
+        ...data,
+        author: data.author as "user" | "ai"
+      };
+
+      setMessages((prev) => [...prev, typedMessage]);
       await fetchConversations();
 
-      return data;
+      return typedMessage;
     } catch (error: any) {
       console.error("Error sending message:", error);
       toast({

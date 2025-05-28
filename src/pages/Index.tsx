@@ -1,16 +1,16 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Header from "@/components/Header";
 import ChatInterface from "@/components/ChatInterface";
-import ConversationsSidebar from "@/components/ConversationsSidebar";
 import LearningPreferences from "@/components/LearningPreferences";
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 
 const Index = () => {
   const { profile, userProgress, addXP } = useAuth();
   const [showPreferences, setShowPreferences] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   if (!profile || !userProgress) {
     return (
@@ -31,32 +31,37 @@ const Index = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        <Header
-          userXP={userProgress.xp}
-          userLevel={userProgress.level}
-          onOpenPreferences={() => setShowPreferences(true)}
-        />
-
-        <div className="flex-1 flex overflow-hidden">
-          <ConversationsSidebar
-            isCollapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+      <SidebarProvider>
+        <div className="min-h-screen bg-gray-50 flex w-full">
+          <AppSidebar 
+            learningStyle={learningStyle} 
+            onOpenPreferences={() => setShowPreferences(true)} 
           />
+          
+          <SidebarInset>
+            <div className="flex flex-col h-screen">
+              <Header
+                userXP={userProgress.xp}
+                userLevel={userProgress.level}
+                onOpenPreferences={() => setShowPreferences(true)}
+              >
+                <SidebarTrigger className="mr-2" />
+              </Header>
 
-          <div className="flex-1 flex flex-col">
-            <ChatInterface learningStyle={learningStyle} onXPGain={addXP} />
-          </div>
+              <div className="flex-1 overflow-hidden">
+                <ChatInterface learningStyle={learningStyle} onXPGain={addXP} />
+              </div>
+            </div>
+          </SidebarInset>
+
+          {showPreferences && (
+            <LearningPreferences
+              onClose={() => setShowPreferences(false)}
+              currentStyle={learningStyle}
+            />
+          )}
         </div>
-
-        {showPreferences && (
-          <LearningPreferences
-            isOpen={showPreferences}
-            onClose={() => setShowPreferences(false)}
-            currentStyle={learningStyle}
-          />
-        )}
-      </div>
+      </SidebarProvider>
     </ProtectedRoute>
   );
 };
