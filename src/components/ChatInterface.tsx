@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Send, Bot, User, ExternalLink, Search, Youtube } from "lucide-react";
-import { useConversations } from "@/hooks/useConversations";
+import { useConversations, Message } from "@/hooks/useConversations";
 
 interface ChatInterfaceProps {
   learningStyle: string;
@@ -15,7 +15,8 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { messages, currentConversation, sendMessage } = useConversations();
+  const { messages, currentConversation, sendMessage, setMessages } =
+    useConversations(learningStyle);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +39,11 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
     );
   }, [learningStyle]);
 
-  const simulateAIResponse = (userMessage: string): Message => {
+  const simulateAIResponse = (
+    userMessage: string,
+    userId: string,
+    conversationId: string
+  ): Message => {
     // Simulação de resposta da IA baseada no estilo de aprendizagem
     let content = "";
 
@@ -52,7 +57,19 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
       content = `Vou explicar "${userMessage}" de forma detalhada:\n\n**Conceito Principal:**\nEste tópico envolve...\n\n**Pontos Importantes:**\n• Ponto 1\n• Ponto 2\n• Ponto 3\n\n**Aplicação Prática:**\nNa prática, isso significa...`;
     }
 
-    return content;
+    const timestamp = new Date().toISOString(); // Gera um timestamp no formato ISO
+
+    // Criação de um ID fictício, pois você pode querer gerar isso de forma dinâmica
+    const messageId = Math.random().toString(36).substring(2); // ID único simples gerado aleatoriamente
+
+    return {
+      id: messageId,
+      conversation_id: conversationId,
+      user_id: userId,
+      content: content,
+      author: "ai", // A resposta é da IA, então o autor será sempre "ai"
+      timestamp: timestamp,
+    };
   };
 
   const handleSendMessage = async () => {
