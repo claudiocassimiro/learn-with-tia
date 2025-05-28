@@ -1,11 +1,10 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Send, Bot, User, ExternalLink, Search, Youtube } from "lucide-react";
-import { useConversations } from '@/hooks/useConversations';
+import { useConversations } from "@/hooks/useConversations";
 
 interface ChatInterfaceProps {
   learningStyle: string;
@@ -26,7 +25,21 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
     scrollToBottom();
   }, [messages]);
 
-  const simulateAIResponse = (userMessage: string): string => {
+  useEffect(() => {
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === "1"
+          ? {
+              ...msg,
+              content: `Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓\n\nVi que você prefere aprender através de **${learningStyle}**. Vou adaptar todas as minhas respostas para esse estilo!\n\nO que você gostaria de aprender hoje?`,
+            }
+          : msg
+      )
+    );
+  }, [learningStyle]);
+
+  const simulateAIResponse = (userMessage: string): Message => {
+    // Simulação de resposta da IA baseada no estilo de aprendizagem
     let content = "";
 
     if (learningStyle === "Exercícios") {
@@ -50,12 +63,12 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
     setIsLoading(true);
 
     // Send user message
-    await sendMessage(userMessageContent, 'user');
+    await sendMessage(userMessageContent, "user");
 
     // Simulate AI response
     setTimeout(async () => {
       const aiResponse = simulateAIResponse(userMessageContent);
-      await sendMessage(aiResponse, 'ai');
+      await sendMessage(aiResponse, "ai");
       setIsLoading(false);
       onXPGain(10); // Ganhar XP por interação
     }, 1500);
@@ -107,11 +120,13 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
                 </Badge>
               </div>
               <div className="prose prose-sm max-w-none">
-                {message.content.split("\n").map((line: string, index: number) => (
-                  <p key={index} className="mb-2 last:mb-0">
-                    {line}
-                  </p>
-                ))}
+                {message.content
+                  .split("\n")
+                  .map((line: string, index: number) => (
+                    <p key={index} className="mb-2 last:mb-0">
+                      {line}
+                    </p>
+                  ))}
               </div>
               <div className="text-xs text-gray-500 mt-2">
                 {new Date(message.timestamp).toLocaleTimeString()}
@@ -134,7 +149,8 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
                 Bem-vindo ao TIAcher!
               </h3>
               <p className="text-gray-500 mb-4">
-                Seu professor de IA personalizado para {learningStyle.toLowerCase()}
+                Seu professor de IA personalizado para{" "}
+                {learningStyle.toLowerCase()}
               </p>
               <p className="text-sm text-gray-400">
                 Crie uma nova conversa ou selecione uma existente para começar
@@ -159,11 +175,13 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
                       </div>
                       <div className="prose prose-sm max-w-none">
                         <p>
-                          Olá! Sou o TIAcher, seu professor de IA personalizado! 🎓
+                          Olá! Sou o TIAcher, seu professor de IA personalizado!
+                          🎓
                         </p>
                         <p>
-                          Vi que você prefere aprender através de **{learningStyle}**. 
-                          Vou adaptar todas as minhas respostas para esse estilo!
+                          Vi que você prefere aprender através de **
+                          {learningStyle}**. Vou adaptar todas as minhas
+                          respostas para esse estilo!
                         </p>
                         <p>O que você gostaria de aprender hoje?</p>
                       </div>
@@ -172,7 +190,7 @@ const ChatInterface = ({ learningStyle, onXPGain }: ChatInterfaceProps) => {
                 </Card>
               </div>
             )}
-            
+
             {messages.map(renderMessage)}
 
             {isLoading && (
